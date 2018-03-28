@@ -110,16 +110,14 @@ namespace LanguageFeatures.Controllers
                 new Product {Name = "Flaga narożna", Category="Piłka nożna", Price = 34.95M}
             };
 
-            var foundProducts = products.OrderByDescending(e => e.Price).Take(3).Select(e => new { e.Name, e.Price });
-            int count = 0;
+            var foundProducts = products.OrderByDescending(product => product.Price).Take(3).Select(product => new { product.Name, product.Price });
+
+            products[2] = new Product { Name = "Stadion", Price = 79600M };
+
             StringBuilder result = new StringBuilder();
             foreach(var p in foundProducts)
             {
-                result.AppendFormat($"Cena {p.Price}");
-                if (++count == 3)
-                {
-                    break;
-                }
+                result.AppendFormat($"Cena: {p.Price}, ");                
             }
 
             return View("Result", (object)result.ToString());
