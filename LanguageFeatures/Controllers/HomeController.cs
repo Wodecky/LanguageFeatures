@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -23,7 +24,7 @@ namespace LanguageFeatures.Controllers
 
             string productName = myProduct.Name;
 
-            return View("Result", (object)String.Format("Nazwa produktu: {0}", productName));
+            return View("Result", (object)String.Format($"Nazwa produktu: {productName}"));
         }
 
         public ViewResult CreateProduct()
@@ -97,6 +98,31 @@ namespace LanguageFeatures.Controllers
                 total += prod.Price;
             }
             return View("Result", (object)String.Format($"Razem koszyk: {total}"));
+        }
+
+        public ViewResult FindProducts()
+        {
+            Product[] products =
+            {
+                new Product {Name = "Kajak", Category="Sporty wodne", Price = 275M},
+                new Product {Name = "Kamizelka ratunkowa", Category="Sporty wodne", Price = 48.95M},
+                new Product {Name = "Piłka nożna", Category="Piłka nożna", Price = 19.50M},
+                new Product {Name = "Flaga narożna", Category="Piłka nożna", Price = 34.95M}
+            };
+
+            var foundProducts = products.OrderByDescending(e => e.Price).Take(3).Select(e => new { e.Name, e.Price });
+            int count = 0;
+            StringBuilder result = new StringBuilder();
+            foreach(var p in foundProducts)
+            {
+                result.AppendFormat($"Cena {p.Price}");
+                if (++count == 3)
+                {
+                    break;
+                }
+            }
+
+            return View("Result", (object)result.ToString());
         }
     }
 }
